@@ -25,6 +25,9 @@ async function handle(msg, sender) {
       if (!MEETING_ID_RE.test(msg.meetingId) || !msg.state || typeof msg.state !== 'object') {
         return { ok: false };
       }
+      if (msg.state.trackerVersion !== '1.2') {
+        return { ok: false, error: 'stale content script: refresh the Meet tab' };
+      }
       await chrome.storage.local.set({
         [keyFor(msg.meetingId)]: msg.state,
         lastMeeting: msg.meetingId,
